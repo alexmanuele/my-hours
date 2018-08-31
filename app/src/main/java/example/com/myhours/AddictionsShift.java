@@ -3,22 +3,19 @@ package example.com.myhours;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
-public class MobileShift extends Shift {
-    public MobileShift(){}
-    public MobileShift(LocalDateTime start, LocalDateTime end){
+public class AddictionsShift extends Shift {
+
+    public AddictionsShift(){}
+    public AddictionsShift(LocalDateTime start, LocalDateTime end){
         super(start, end);
     }
-
     @Override
     public double calculateHours() {
         try{
             double hours = Duration.between(this.start, this.end).toMinutes();
             hours = hours/60;
-            if(hours >= 12){
-                hours -= 0.75;
-            }
-            else if(hours >= 8){
-                hours -= 0.5;
+            if(hours >= 8) {
+                hours -= 1;
             }
             return hours;
         }catch(Exception e){
