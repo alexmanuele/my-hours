@@ -28,6 +28,10 @@ public class PeriodCalculator {
             initial = initial.plusWeeks(2);
         }
     }
+
+    public ArrayList<LocalDate> getPeriodStartDates(){
+        return this.periodStartDates;
+    }
     public LocalDate getPeriodStart(){
         return periodStart;
     }
