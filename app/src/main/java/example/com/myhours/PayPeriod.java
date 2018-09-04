@@ -8,31 +8,37 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class PayPeriod implements Serializable{
-    private LocalDateTime start;
-    private LocalDateTime end;
+    private String start;
+    private String end;
+   // private LocalDateTime detailStart;
+   //private LocalDateTime detailEnd;
     private double numHours;
     private ArrayList<Shift> shifts;
 
-    public PayPeriod(){}
+    public PayPeriod(){
+
+    }
     public PayPeriod(LocalDateTime start, LocalDateTime end, int hours){
-        this.start = start;
-        this.end = end;
+        this.start = start.toString();
+        this.end = end.toString();
+   //     this.detailStart = start;
+   //     this.detailEnd = end;
         this.numHours = hours;
         shifts = new ArrayList<Shift>();
     }
 
-    public LocalDateTime getStart() {
+    public String getStart() {
         return start;
     }
-    public void setStart(LocalDateTime start){
+    public void setStart(String start){
         this.start = start;
     }
 
-    public LocalDateTime getEnd() {
+    public String getEnd() {
         return end;
     }
 
-    public void setEnd(LocalDateTime end) {
+    public void setEnd(String end) {
         this.end = end;
     }
     public double getNumHours(){
@@ -44,6 +50,16 @@ public class PayPeriod implements Serializable{
     public void setShifts(ArrayList<Shift> shifts){
         this.shifts = shifts;
     }
+
+    public LocalDateTime detailEnd() {
+        return LocalDateTime.parse(this.end);
+    }
+
+    public LocalDateTime detailStart() {
+        return LocalDateTime.parse(this.start);
+    }
+
+
     public ArrayList<Shift> getShifts(){
         return this.shifts;
     }

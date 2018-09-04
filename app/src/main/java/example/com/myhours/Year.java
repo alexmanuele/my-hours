@@ -11,18 +11,18 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class Year implements Serializable {
     private int yearNumber;
-    private LocalDateTime startDate;
-    private LocalDateTime endDate;
+    private String startDate;
+    private String endDate;
     private ConcurrentHashMap<String, PayPeriod> periods;
-    private LocalDateTime firstPayPeriodStart;
+    private String firstPayPeriodStart;
     private DateTimeFormatter dtf;
 
     public Year(){}
     public Year(int year, LocalDateTime firstPayPeriodStart){
         this.yearNumber = year;
-        this.startDate = LocalDateTime.of(year, 1,1,0,0);
-        this.endDate = LocalDateTime.of(year, 12, 31,23,59);
-        this.firstPayPeriodStart = firstPayPeriodStart;
+        this.startDate = LocalDateTime.of(year, 1,1,0,0).toString();
+        this.endDate = LocalDateTime.of(year, 12, 31,23,59).toString();
+        this.firstPayPeriodStart = firstPayPeriodStart.toString();
         periods = new ConcurrentHashMap<String, PayPeriod>();
         dtf = DateTimeFormatter.ofPattern("MM dd");
         makePeriods();
@@ -34,26 +34,30 @@ public class Year implements Serializable {
     public int getYearNumber(){
         return this.yearNumber;
     }
-    public void setStartDate(LocalDateTime startDate){
+    public void setStartDate(String startDate){
         this.startDate = startDate;
     }
 
-    public LocalDateTime getStartDate() {
+    public String getStartDate() {
         return startDate;
     }
-
-    public void setEndDate(LocalDateTime endDate) {
+    public LocalDateTime getDetailStartDate(){
+        return LocalDateTime.parse(this.startDate);
+    }
+    public void setEndDate(String endDate) {
         this.endDate = endDate;
     }
 
-    public LocalDateTime getEndDate() {
+    public String getEndDate() {
         return endDate;
     }
+    public LocalDateTime getDetailEndDate(){return LocalDateTime.parse(this.endDate);}
 
-    public LocalDateTime getFirstPayPeriodStart() {
+
+    public String getFirstPayPeriodStart() {
         return firstPayPeriodStart;
     }
-    public void setFirstPayPeriodStart(LocalDateTime firstPayPeriodStart){
+    public void setFirstPayPeriodStart(String firstPayPeriodStart){
         this.firstPayPeriodStart = firstPayPeriodStart;
     }
 
@@ -65,7 +69,7 @@ public class Year implements Serializable {
     }
 
     public void makePeriods(){
-        LocalDateTime periodStart = this.firstPayPeriodStart;
+        LocalDateTime periodStart = LocalDateTime.parse(this.firstPayPeriodStart);
         int year = this.yearNumber;
         LocalDateTime periodEnd;
         while(periodStart.getYear() < (year + 1)){
@@ -77,14 +81,16 @@ public class Year implements Serializable {
 
     }
     public void addShifts(Shift newShift, PayPeriod payPeriod){
-        String periodStart = payPeriod.getStart().format(dtf);
+        String periodStart = payPeriod.detailStart().format(dtf);
+        System.out.println("periodStart string: " + periodStart);
         PayPeriod selectedPeriod = this.periods.get(periodStart);
-        if(newShift.end.isAfter(payPeriod.getEnd())){
-            LocalDateTime shiftEnd = newShift.getEnd();
+        System.out.println(selectedPeriod.getStart());
+        if(newShift.detailEnd().isAfter(payPeriod.detailEnd())){
+            LocalDateTime shiftEnd = newShift.detailEnd();
             LocalDateTime midnightOfShift = LocalDateTime.of(
                     shiftEnd.getYear(), shiftEnd.getMonth(),
                     shiftEnd.getDayOfMonth(), 0,0);
-            double hoursBeforeMidnight = Duration.between(newShift.getStart(), midnightOfShift).toMinutes();
+            double hoursBeforeMidnight = Duration.between(newShift.detailStart(), midnightOfShift).toMinutes();
             hoursBeforeMidnight = hoursBeforeMidnight / 60;
             double hoursAfterMidnight = newShift.getHours() - hoursBeforeMidnight;
 

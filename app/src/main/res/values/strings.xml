@@ -3,4 +3,5 @@
     <string name="main_payPeriod">Current Pay Period:</string>
     <string name="header" />
     <string name="nav_home">Home</string>
+    <string name="main_databaseReadError">System error</string>
 </resources>

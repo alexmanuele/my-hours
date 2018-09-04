@@ -15,5 +15,6 @@ public class CalculationTest {
         testYear.addShifts(nightShift, testYear.getPeriods().get("01 07"));
         System.out.println(testYear.getPeriods().get("01 07").getNumHours());
         System.out.println(testYear.getPeriods().get("01 21").getNumHours());
+        System.out.println(testYear.getPeriods().get("01 21").getStart());
     }
 }

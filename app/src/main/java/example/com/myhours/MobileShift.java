@@ -12,7 +12,8 @@ public class MobileShift extends Shift {
     @Override
     public double calculateHours() {
         try{
-            double hours = Duration.between(this.start, this.end).toMinutes();
+            double hours = Duration.between(LocalDateTime.parse(this.start),
+                    LocalDateTime.parse(this.end)).toMinutes();
             hours = hours/60;
             if(hours >= 12){
                 hours -= 0.75;
