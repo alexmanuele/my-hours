@@ -47,5 +47,8 @@ public class PayPeriod implements Serializable{
     public ArrayList<Shift> getShifts(){
         return this.shifts;
     }
+    public void addHours(double hours){
+        this.numHours += hours;
+    }
 
 }

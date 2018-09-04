@@ -1,6 +1,7 @@
 package example.com.myhours;
 
 import java.io.Serializable;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -74,5 +75,28 @@ public class Year implements Serializable {
 
         }
 
+    }
+    public void addShifts(Shift newShift, PayPeriod payPeriod){
+        String periodStart = payPeriod.getStart().format(dtf);
+        PayPeriod selectedPeriod = this.periods.get(periodStart);
+        if(newShift.end.isAfter(payPeriod.getEnd())){
+            LocalDateTime shiftEnd = newShift.getEnd();
+            LocalDateTime midnightOfShift = LocalDateTime.of(
+                    shiftEnd.getYear(), shiftEnd.getMonth(),
+                    shiftEnd.getDayOfMonth(), 0,0);
+            double hoursBeforeMidnight = Duration.between(newShift.getStart(), midnightOfShift).toMinutes();
+            hoursBeforeMidnight = hoursBeforeMidnight / 60;
+            double hoursAfterMidnight = newShift.getHours() - hoursBeforeMidnight;
+
+            String nextPeriodStart = shiftEnd.format(dtf);
+
+            this.periods.get(periodStart).addHours(hoursBeforeMidnight);
+            this.periods.get(nextPeriodStart).addHours(hoursAfterMidnight);
+
+        }
+        else{
+            periods.get(selectedPeriod).addHours(newShift.getHours());
+
+        }
     }
 }
