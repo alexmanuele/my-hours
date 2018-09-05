@@ -36,6 +36,7 @@ public class AddShiftsActivity extends BaseActivity implements View.OnClickListe
         firebaseDBInstance = FirebaseDatabase.getInstance();
         firebaseReference = firebaseDBInstance.getReference();
         calendarEpochValue = calendarView.getDate();
+        calendarDate = LocalDateTime.ofInstant(Instant.ofEpochMilli(calendarEpochValue), ZoneId.systemDefault());
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
