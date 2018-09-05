@@ -1,10 +1,6 @@
 package example.com.myhours;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -20,7 +16,6 @@ import com.google.firebase.database.ValueEventListener;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
 public class AddShiftsActivity extends BaseActivity implements View.OnClickListener  {
@@ -40,14 +35,24 @@ public class AddShiftsActivity extends BaseActivity implements View.OnClickListe
         calendarView = (CalendarView) findViewById(R.id.shifts_calendarView);
         firebaseDBInstance = FirebaseDatabase.getInstance();
         firebaseReference = firebaseDBInstance.getReference();
+        calendarEpochValue = calendarView.getDate();
+        calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+            @Override
+            public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
+                //calendarEpochValue = calendarView.getDate();
+                //calendarDate = LocalDateTime.ofInstant(Instant.ofEpochMilli(calendarEpochValue), ZoneId.systemDefault());
+                calendarDate = LocalDateTime.of(year, month+1, dayOfMonth, 0, 0);
+                Log.d("date change: ", calendarDate.toString());
+            }
+        });
 
     }
 
     @Override
     public void onClick(View v) {
         if(v == dateCheck){
-            calendarEpochValue = calendarView.getDate();
-            calendarDate = LocalDateTime.ofInstant(Instant.ofEpochMilli(calendarEpochValue), ZoneId.systemDefault());
+          //  calendarEpochValue = calendarView.getDate();
+
             /*
             use ValueEventListener to query DB for the year using calendarDate.getYear()
             In onDataChange, call a PeriodCalculator to get the period from the year
@@ -61,7 +66,7 @@ public class AddShiftsActivity extends BaseActivity implements View.OnClickListe
                     PeriodCalculator pc = new PeriodCalculator(year);
                     PayPeriod payPeriod = pc.getPeriod(calendarDate);
                     //openDialog(calendarDate, payPeriod);
-                    ModifyShift dialog = new ModifyShift();
+                    ModifyShiftDialog dialog = new ModifyShiftDialog();
                     dialog.setInputData(calendarDate, payPeriod);
                     dialog.show(getSupportFragmentManager(), calendarDate.toString());
                 }
