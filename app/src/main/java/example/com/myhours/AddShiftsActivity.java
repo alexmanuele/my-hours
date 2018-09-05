@@ -60,7 +60,10 @@ public class AddShiftsActivity extends BaseActivity implements View.OnClickListe
                     Year year = dataSnapshot.getValue(Year.class);
                     PeriodCalculator pc = new PeriodCalculator(year);
                     PayPeriod payPeriod = pc.getPeriod(calendarDate);
-                    openDialog(calendarDate, payPeriod);
+                    //openDialog(calendarDate, payPeriod);
+                    ModifyShift dialog = new ModifyShift();
+                    dialog.setInputData(calendarDate, payPeriod);
+                    dialog.show(getSupportFragmentManager(), calendarDate.toString());
                 }
 
                 @Override
@@ -72,14 +75,14 @@ public class AddShiftsActivity extends BaseActivity implements View.OnClickListe
                     calendarDate.getYear())).addValueEventListener(valueEventListener);
         }
     }
-
+/*
     public void openDialog(LocalDateTime selectedDate, PayPeriod payPeriod){
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MMM dd");
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         String periodLength = payPeriod.detailStart().format(dtf) + " - " + payPeriod.detailEnd().format(dtf);
         builder.setTitle(periodLength);
         builder.setMessage(selectedDate.format(dtf)
-        + "/nHours in this pay period: " + String.format(Locale.CANADA, "%.1f", payPeriod.getNumHours()));
+        + "\nHours in this pay period: " + String.format(Locale.CANADA, "%.1f", payPeriod.getNumHours()));
 
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
@@ -95,5 +98,5 @@ public class AddShiftsActivity extends BaseActivity implements View.OnClickListe
         Dialog alertDialog = builder.create();
         alertDialog.show();
     }
-
+*/
 }
