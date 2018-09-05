@@ -30,7 +30,10 @@ public class MainActivity extends BaseActivity{
     TextView numberOfHours;
     public FirebaseDatabase firebaseDBInstance;
     public DatabaseReference firebaseReference;
+    LocalDateTime today;
     PayPeriod currentPeriod;
+    Year currentYear;
+    PeriodCalculator pc;
     //Button button;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,23 +47,22 @@ public class MainActivity extends BaseActivity{
         payPeriod = (TextView) findViewById(R.id.main_payPeriodDates);
         numberOfHours = (TextView) findViewById(R.id.main_numHours);
 
-        PeriodCalculator pc = new PeriodCalculator();
-        pc.getPeriod();
         dtf = DateTimeFormatter.ofPattern("MMM dd yyyy");
-        LocalDate start = pc.getPeriodStart();
-        LocalDate end = pc.getPeriodEnd();
-        DateTimeFormatter periodKey = DateTimeFormatter.ofPattern("MM dd");
+        today = LocalDateTime.now();
 
-        ValueEventListener payPeriodListener = new ValueEventListener() {
+        DateTimeFormatter periodKey = DateTimeFormatter.ofPattern("MM dd");
+        ValueEventListener currentYearListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                currentPeriod = (PayPeriod) dataSnapshot.getValue(PayPeriod.class);
+                currentYear = (Year) dataSnapshot.getValue(Year.class);
+                pc = new PeriodCalculator(currentYear);
+                currentPeriod = pc.getPeriod(today);
                 Log.w("Database read: ", "listener:onDataChanged");
-                if(currentPeriod != null) {
+                if (currentPeriod != null) {
                     String periodDescription = currentPeriod.detailStart().format(dtf) + " - " + currentPeriod.detailEnd().format(dtf);
                     payPeriod.setText(periodDescription);
                     numberOfHours.setText(String.format(Locale.CANADA, "Number of hours: %.1f", currentPeriod.getNumHours()));
-                }else {
+                } else {
                     payPeriod.setText(R.string.main_databaseReadError);
                 }
             }
@@ -71,8 +73,9 @@ public class MainActivity extends BaseActivity{
             }
         };
 
-        firebaseReference.child("years").child(String.format(Locale.CANADA, "%d", start.getYear())).child("periods")
-                .child(start.format(periodKey)).addValueEventListener(payPeriodListener);
+
+        firebaseReference.child("years").child(String.format(Locale.CANADA, "%d", today.getYear()))
+                .addValueEventListener(currentYearListener);
 
 
 

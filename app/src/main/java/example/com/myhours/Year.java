@@ -7,13 +7,13 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.concurrent.ConcurrentHashMap;
+
 
 public class Year implements Serializable {
     private int yearNumber;
     private String startDate;
     private String endDate;
-    private ConcurrentHashMap<String, PayPeriod> periods;
+    private HashMap<String, PayPeriod> periods;
     private String firstPayPeriodStart;
     private DateTimeFormatter dtf;
 
@@ -23,7 +23,7 @@ public class Year implements Serializable {
         this.startDate = LocalDateTime.of(year, 1,1,0,0).toString();
         this.endDate = LocalDateTime.of(year, 12, 31,23,59).toString();
         this.firstPayPeriodStart = firstPayPeriodStart.toString();
-        periods = new ConcurrentHashMap<String, PayPeriod>();
+        periods = new HashMap<String, PayPeriod>();
         dtf = DateTimeFormatter.ofPattern("MM dd");
         makePeriods();
     }
@@ -61,10 +61,10 @@ public class Year implements Serializable {
         this.firstPayPeriodStart = firstPayPeriodStart;
     }
 
-    public ConcurrentHashMap<String, PayPeriod> getPeriods() {
+    public HashMap<String, PayPeriod> getPeriods() {
         return periods;
     }
-    public void setPeriods(ConcurrentHashMap<String, PayPeriod> periods){
+    public void setPeriods(HashMap<String, PayPeriod> periods){
         this.periods = periods;
     }
 

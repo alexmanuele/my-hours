@@ -1,5 +1,6 @@
 package example.com.myhours;
 
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import java.time.*;
@@ -11,48 +12,42 @@ public class PeriodCalculator {
        Aug 5 -18, pay day aug 30
      */
 
-    public ArrayList<LocalDate> periodStartDates;
-    private LocalDate today;
-    private LocalDate periodStart;
-    private LocalDate periodEnd;
-
-    public PeriodCalculator(){
-        this.today = LocalDate.now();
-        this.getPeriodStarts();
+    public ArrayList<LocalDateTime> periodStartDates;
+    private Year year;
+    public PeriodCalculator(Year year){
+        this.year = year;
+        getPeriodStarts(year);
     }
-    private void getPeriodStarts(){
-        periodStartDates = new ArrayList<LocalDate>();
-        LocalDate initial = LocalDate.of(2018, Month.AUGUST, 5);
-        while(initial.getYear() < 2019){
+
+    private void getPeriodStarts(Year year){
+        periodStartDates = new ArrayList<LocalDateTime>();
+        LocalDateTime initial = LocalDateTime.parse(year.getFirstPayPeriodStart());
+        int yearNumber = initial.getYear() + 1;
+        while(initial.getYear() < yearNumber){
             periodStartDates.add(initial);
             initial = initial.plusWeeks(2);
         }
     }
 
-    public ArrayList<LocalDate> getPeriodStartDates(){
+    public ArrayList<LocalDateTime> getPeriodStartDates(){
         return this.periodStartDates;
     }
-    public LocalDate getPeriodStart(){
-        return periodStart;
-    }
 
-    public LocalDate getPeriodEnd() {
-        return periodEnd;
-    }
+    public PayPeriod getPeriod(LocalDateTime date) {
+        LocalDateTime periodStart = periodStartDates.get(0);
+        LocalDateTime periodEnd;
 
-    public LocalDate getToday() {
-        return today;
-    }
-
-    public void getPeriod(){
-        for(int i = 0; i < periodStartDates.size(); i++){
-            this.periodStart = periodStartDates.get(i);
-            this.periodEnd = periodStart.plusDays(13);
-            if(today.isEqual(periodStart) || today.isEqual(periodEnd))
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM dd");
+        for (int i = 0; i < periodStartDates.size(); i++) {
+            periodStart = periodStartDates.get(i);
+            periodEnd = periodStart.plusDays(13);
+            if (date.isEqual(periodStart) || date.isEqual(periodEnd))
                 break;
-            if(today.isAfter(periodStart) && today.isBefore(periodEnd)){
+            if (date.isAfter(periodStart) && date.isBefore(periodEnd)) {
                 break;
             }
         }
+        return this.year.getPeriods().get(periodStart.format(dtf));
+
     }
 }

@@ -1,5 +1,6 @@
 package example.com.myhours;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.NavigationView;
@@ -43,12 +44,17 @@ public abstract class BaseActivity extends AppCompatActivity {
                         // For example, swap UI fragments here
                         //Intent loginIntent = new Intent(this,LoginActivity.class);
                         if (menuItem.getItemId() == R.id.nav_home) {
-                            //showMain();
+                            showMain();
+                        }
+                        if (menuItem.getItemId() == R.id.nav_addShifts){
+                            showAddShifts();
                         }
                         return true;
                     }
                 });
     }
+
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -67,5 +73,13 @@ public abstract class BaseActivity extends AppCompatActivity {
         linearLayout.addView(inflater.inflate(id, null), new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT));
 
+    }
+
+    private void showMain(){
+        finish();
+        startActivity(new Intent(this, MainActivity.class));
+    }
+    private void showAddShifts() {
+        startActivity(new Intent(this, AddShiftsActivity.class));
     }
 }

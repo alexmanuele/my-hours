@@ -4,4 +4,6 @@
     <string name="header" />
     <string name="nav_home">Home</string>
     <string name="main_databaseReadError">System error</string>
+    <string name="nav_shifts">Manage Shifts</string>
+    <string name="shifts_button">View Date</string>
 </resources>
