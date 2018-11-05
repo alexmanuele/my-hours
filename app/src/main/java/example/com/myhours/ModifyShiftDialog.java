@@ -55,6 +55,12 @@ public class ModifyShiftDialog extends DialogFragment {
                     textView = (TextView) getDialog().findViewById(R.id.modShift_date);
                     checkBox = (CheckBox) getDialog().findViewById(R.id.modShift_checkBox);
                     textView.setText(selectedDate.format(dtf));
+                    if(checkBox.isChecked()){
+                        isNightShift = true;
+                    }else{
+                        isNightShift = false;
+                    }
+                    showTimePicker(selectedDate);
                 }
             });
             builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -76,5 +82,10 @@ public class ModifyShiftDialog extends DialogFragment {
     public void setInputData(LocalDateTime localDateTimeIn, PayPeriod payPeriodIn){
         this.selectedDate = localDateTimeIn;
         this.selectedPeriod = payPeriodIn;
+    }
+    public void showTimePicker(LocalDateTime selectedDate){
+        TimePickDialog newFragment = new TimePickDialog();
+        newFragment.passDate(selectedDate);
+        newFragment.show(getFragmentManager(), "timePicker");
     }
 }

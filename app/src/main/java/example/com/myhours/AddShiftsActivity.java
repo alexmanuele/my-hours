@@ -1,5 +1,6 @@
 package example.com.myhours;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,6 +26,7 @@ public class AddShiftsActivity extends BaseActivity implements View.OnClickListe
     CalendarView calendarView;
     public FirebaseDatabase firebaseDBInstance;
     public DatabaseReference firebaseReference;
+    PayPeriod payPeriod;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,11 +67,15 @@ public class AddShiftsActivity extends BaseActivity implements View.OnClickListe
                     Log.d("AddShifts Datbase Query: " , "Successful");
                     Year year = dataSnapshot.getValue(Year.class);
                     PeriodCalculator pc = new PeriodCalculator(year);
-                    PayPeriod payPeriod = pc.getPeriod(calendarDate);
+                    payPeriod = pc.getPeriod(calendarDate);
                     //openDialog(calendarDate, payPeriod);
+                    /* Replaces the dialog fragment with an activity.
                     ModifyShiftDialog dialog = new ModifyShiftDialog();
                     dialog.setInputData(calendarDate, payPeriod);
                     dialog.show(getSupportFragmentManager(), calendarDate.toString());
+                    */
+
+
                 }
 
                 @Override
@@ -79,6 +85,11 @@ public class AddShiftsActivity extends BaseActivity implements View.OnClickListe
             };
             firebaseReference.child("years").child(String.format(Locale.CANADA, "%d",
                     calendarDate.getYear())).addValueEventListener(valueEventListener);
+            Intent intent = new Intent(this, ModifyShiftActivity.class);
+            intent.putExtra("Date", calendarDate);
+            intent.putExtra("Period", payPeriod);
+            startActivity(intent);
+
         }
     }
 /*
