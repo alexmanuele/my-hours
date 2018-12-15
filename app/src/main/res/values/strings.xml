@@ -15,4 +15,11 @@
     <string name="shift_cancelButton">Go Back</string>
     <string name="shift_end_time">Select Shift End Time</string>
     <string name="shift_end_date">Select End Date.</string>
+
+    <!-- Modify Shift Activity -->
+    <string-array name="shiftTypes">
+        <item>Select the shift type…</item>
+        <item>Mobile Crisis</item>
+        <item>Addictions</item>
+    </string-array>
 </resources>
